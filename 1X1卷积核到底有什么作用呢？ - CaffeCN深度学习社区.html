@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://www.caffecn.cn/?/question/136 -->
+<html class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+<meta name="renderer" content="webkit">
+<title>1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区</title>
+<meta name="keywords" content="1x1,卷积,到底,作用">
+<meta name="description" content="1X1卷积核到底有什么作用呢？ - 发现很多网络使用了1X1卷积核，这能起到什么作用呢？另外我一直觉得，1X1卷积核就是对输入的一个比例缩放，因为1X1卷积核只有一个参数，这个核在输入上滑动，就相当于给输入数据乘以一个系数。不知道我理解的是否正确。">
+<!--<base href="http://www.caffecn.cn/?/">--><base href="."><!--[if IE]></base><![endif]-->
+<link href="http://www.caffecn.cn/static/css/default/img/favicon.ico?v=20151103" rel="shortcut icon" type="image/x-icon">
+
+<link rel="stylesheet" type="text/css" href="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/icon.css">
+
+<link href="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/common.css" rel="stylesheet" type="text/css">
+<link href="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/link.css" rel="stylesheet" type="text/css">
+<link href="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/style.css" rel="stylesheet" type="text/css">
+
+
+<script type="text/javascript">
+	var _787F0E8FDD4B9141E617D78621A66B4D="";
+	var G_POST_HASH=_787F0E8FDD4B9141E617D78621A66B4D;
+	var G_INDEX_SCRIPT = "?/";
+	var G_SITE_NAME = "CaffeCN深度学习社区";
+	var G_BASE_URL = "http://www.caffecn.cn/?";
+	var G_STATIC_URL = "http://www.caffecn.cn/static";
+	var G_UPLOAD_URL = "http://caffe.caffecn.cn/uploads";
+	var G_USER_ID = "";
+	var G_USER_NAME = "";
+	var G_UPLOAD_ENABLE = "N";
+	var G_UNREAD_NOTIFICATION = 0;
+	var G_NOTIFICATION_INTERVAL = 100000;
+	var G_CAN_CREATE_TOPIC = "";
+	var G_ADVANCED_EDITOR_ENABLE = "Y";
+
+	</script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/jquery.2.js.下载" type="text/javascript"></script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/jquery.form.js.下载" type="text/javascript"></script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/plug-in_module.js.下载" type="text/javascript"></script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/aws.js.下载" type="text/javascript"></script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/aw_template.js.下载" type="text/javascript"></script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/app.js.下载" type="text/javascript"></script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/ckeditor.js.下载" type="text/javascript"></script><style>.cke{visibility:hidden;}</style>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/jquery.js.下载" type="text/javascript"></script>
+<script type="text/javascript" src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/compatibility.js.下载"></script>
+<script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/latest.js.下载"></script><script type="text/javascript" async="" src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/MathJax.js.下载"></script>
+<!--[if lte IE 8]>
+	<script type="text/javascript" src="http://www.caffecn.cn/static/js/respond.js"></script>
+<![endif]-->
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.fancybox-margin{margin-right:17px;}</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body><div id="MathJax_Message" style="display: none;"></div><noscript unselectable="on" id="noscript">
+    &lt;div class="aw-404 aw-404-wrap container"&gt;
+        &lt;img src="http://www.caffecn.cn/static/common/no-js.jpg"&gt;
+        &lt;p&gt;你的浏览器禁用了JavaScript, 请开启后刷新浏览器获得更好的体验!&lt;/p&gt;
+    &lt;/div&gt;
+</noscript>
+
+	<div class="aw-top-menu-wrap">
+		<div class="container">
+			<!-- logo -->
+			<div class="aw-logo hidden-xs">
+				<a href="http://www.caffecn.cn/"></a>
+			</div>
+			<!-- end logo -->
+			<!-- 搜索框 -->
+			<div class="aw-search-box  hidden-xs hidden-sm">
+				<form class="navbar-search" action="http://www.caffecn.cn/?/search/" id="global_search_form" method="post">
+					<input class="form-control search-query" type="text" placeholder="搜索问题、话题或人" autocomplete="off" name="q" id="aw-search-query">
+					<span title="搜索" id="global_search_btns" onclick="$(&#39;#global_search_form&#39;).submit();"><i class="icon icon-search"></i></span>
+					<div class="aw-dropdown">
+						<div class="mod-body">
+							<p class="title">输入关键字进行搜索</p>
+							<ul class="aw-dropdown-list hide"></ul>
+							<p class="search"><span>搜索:</span><a onclick="$(&#39;#global_search_form&#39;).submit();"></a></p>
+						</div>
+						<div class="mod-footer">
+							<a href="http://www.caffecn.cn/?/publish" onclick="$(&#39;#header_publish&#39;).click();" class="pull-right btn btn-mini btn-success publish">发起问题</a>
+						</div>
+					</div>
+				</form>
+			</div>
+			<!-- end 搜索框 -->
+			<!-- 导航 -->
+			<div class="aw-top-nav navbar">
+				<div class="navbar-header">
+				  <button class="navbar-toggle pull-left">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				  </button>
+				</div>
+				<nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+				  <ul class="nav navbar-nav">
+										<li><a href="http://www.caffecn.cn/" class=""><i class="icon icon-list"></i> 发现</a>
+						<div class="dropdown-list pull-right">
+							<ul id="extensions-nav-list" style="width: 200px">
+															</ul>
+						</div>
+					</li>
+
+
+					<!-- <li><a href="http://www.caffecn.cn/?/question/" class="active">问题</a></li>
+
+					<li><a href="http://www.caffecn.cn/?/article/" class="">文章</a></li> -->
+
+					<li><a href="http://www.caffecn.cn/?/topic/"><i class="icon icon-topic"></i> 话题</a></li>
+															<li>
+						<a style="font-weight:bold;">· · ·</a>
+						<div class="dropdown-list pull-right">
+							<ul id="extensions-nav-list">
+																							</ul>
+						</div>
+					</li>
+				  </ul>
+				</nav>
+			</div>
+			<!-- end 导航 -->
+			<!-- 用户栏 -->
+			<div class="aw-user-nav">
+				<!-- 登陆&注册栏 -->
+									<a class="login btn btn-normal btn-primary" href="http://www.caffecn.cn/?/account/login/">登录</a>
+					<a class="register btn btn-normal btn-success" href="http://www.caffecn.cn/?/account/register/">注册</a>								<!-- end 登陆&注册栏 -->
+			</div>
+			<!-- end 用户栏 -->
+			<!-- 发起 -->
+						<!-- end 发起 -->
+		</div>
+	</div>
+	
+
+<div class="aw-container-wrap">
+		<div class="container">
+		<div class="row">
+			<div class="aw-content-wrap clearfix">
+				<div class="col-sm-12 col-md-9 aw-main-content">
+					<!-- 话题推荐bar -->
+										<!-- 话题推荐bar -->
+					<!-- 话题bar -->
+					<div class="aw-mod aw-topic-bar" id="question_topic_editor" data-type="question" data-id="136">
+						<div class="tag-bar clearfix">
+														<span class="topic-tag" data-id="2">
+								<a href="http://www.caffecn.cn/?/topic/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA" class="text">深度学习理论</a>
+							</span>
+														
+													</div>
+					</div>
+					<!-- end 话题bar -->
+					<div class="aw-mod aw-question-detail aw-item">
+						<div class="mod-head">
+							<h1>
+								1X1卷积核到底有什么作用呢？							</h1>
+
+													</div>
+						<div class="mod-body">
+							<div class="content markitup-box">
+								发现很多网络使用了1X1卷积核，这能起到什么作用呢？另外我一直觉得，1X1卷积核就是对输入的一个比例缩放，因为1X1卷积核只有一个参数，这个核在输入上滑动，就相当于给输入数据乘以一个系数。不知道我理解的是否正确。
+															</div>
+																				</div>
+						<div class="mod-footer">
+							<div class="meta">
+								<span class="text-color-999">2016-01-26</span>
+
+								<a data-id="136" data-type="question" class="aw-add-comment text-color-999 " data-comment-count="0"><i class="icon icon-comment"></i>添加评论</a>
+
+								
+																
+																<div class="pull-right more-operate">
+									
+									<!-- <a class="text-color-999"  onclick="AWS.dialog('shareOut', {item_type:'question', item_id:136});"> -->
+									<a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+										<i class="icon icon-share"></i>分享									</a>
+									<div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+										<ul class="aw-dropdown-list">
+											<li><a onclick="AWS.User.share_out({webid: &#39;tsina&#39;, content: $(this).parents(&#39;.aw-question-detail&#39;).find(&#39;.markitup-box&#39;)});"><i class="icon icon-weibo"></i> 微博</a></li>
+											<li><a onclick="AWS.User.share_out({webid: &#39;qzone&#39;, content: $(this).parents(&#39;.aw-question-detail&#39;)});"><i class="icon icon-qzone"></i> QZONE</a></li>
+											<li><a onclick="AWS.User.share_out({webid: &#39;weixin&#39;, content: $(this).parents(&#39;.aw-question-detail&#39;)});"><i class="icon icon-wechat"></i> 微信</a></li>
+										</ul>
+									</div>
+
+																	</div>
+							</div>
+						</div>
+						<!-- 站内邀请 -->
+						<div class="aw-invite-box hide" style="display: none;">
+							<div class="mod-head clearfix">
+								<div class="search-box pull-left">
+									<input id="invite-input" class="form-control" type="text" placeholder="搜索你想邀请的人...">
+									<div class="aw-dropdown">
+										<p class="title">没有找到相关结果</p>
+										<ul class="aw-dropdown-list"></ul>
+									</div>
+									<i class="icon icon-search"></i>
+								</div>
+								<div class="invite-list pull-left hide">
+									已邀请:
+																	</div>
+							</div>
+													</div>
+						<!-- end 站内邀请 -->
+						<!-- 相关链接 -->
+						<div class="aw-question-related-box hide" style="display: none;">
+							<form action="http://www.caffecn.cn/?/publish/ajax/save_related_link/" method="post" onsubmit="return false" id="related_link_form">
+								<div class="mod-head">
+									<h2>与内容相关的链接</h2>
+								</div>
+								<div class="mod-body clearfix">
+									<input type="hidden" name="item_id" value="136">
+									<input type="text" class="form-control pull-left" name="link" value="">
+
+									<a onclick="AWS.ajax_post($(&#39;#related_link_form&#39;));" class="pull-left btn btn-success">提交</a>
+								</div>
+							</form>
+						</div>
+						<!-- end 相关链接 -->
+					</div>
+
+										<div class="aw-mod aw-question-comment">
+						<div class="mod-head">
+							<ul class="nav nav-tabs aw-nav-tabs active">
+								
+								<h2 class="hidden-xs">6 个回复</h2> 
+							</ul>
+						</div>
+						<div class="mod-body aw-feed-list">
+															<div class="aw-item" uninterested_count="0" force_fold="0" id="answer_list_228">
+									<div class="mod-head">
+																				<!-- 最佳回答 -->
+										<div class="aw-best-answer">
+											<i class="icon icon-bestbg"></i>
+										</div>
+										<!-- end 最佳回答 -->
+																				<a class="anchor" name="answer_228"></a>
+										<!-- 用户头像 -->
+										<a class="aw-user-img aw-border-radius-5" href="http://www.caffecn.cn/?/people/ruirui_ICT" data-id="92"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/92_avatar_mid.jpg" alt=""></a>										<!-- end 用户头像 -->
+										<div class="title">
+											<p>
+																									<a class="aw-user-name" href="http://www.caffecn.cn/?/people/ruirui_ICT" data-id="92">ruirui_ICT</a>
+																																																			<i class="icon-v" title="个人认证"></i>
+																										 - <span class="text-color-999">听大大们说，要“左手代码，右手公式”，喵~</span>																																			</p>
+											<p class="text-color-999 aw-agree-by">
+												赞同来自:
+
+																																				<a href="http://www.caffecn.cn/?/people/caffe" data-id="1" class="aw-user-name">caffe</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/sunlinjun" data-id="10" class="aw-user-name">孙琳钧</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/%E6%B5%B7%E4%B9%8B%E8%93%9D" data-id="193" class="aw-user-name">海之蓝</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54" class="aw-user-name">月光里的阳光ysu</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/OutLaws" data-id="62" class="aw-user-name">OutLaws</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/%E6%9D%8E%E6%89%AC" data-id="32" class="aw-user-name hide">李扬</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/disheng" data-id="41" class="aw-user-name hide">disheng</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/tracer" data-id="216" class="aw-user-name hide">tracer</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/pustar" data-id="146" class="aw-user-name hide">pustar</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/xjtuljy" data-id="235" class="aw-user-name hide">xjtuljy</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/yuzzzz" data-id="283" class="aw-user-name hide">yuzzzz</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/%E5%B0%8F%E5%B0%8FZ" data-id="990" class="aw-user-name hide">小小Z</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/%E5%BE%A1%E5%AE%85%E6%9A%B4%E5%90%9B" data-id="1889" class="aw-user-name hide">御宅暴君</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/%E5%B0%8F%E6%9D%91%E9%95%BF" data-id="306" class="aw-user-name hide">小村长</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/bonerkiller" data-id="1993" class="aw-user-name hide">bonerkiller</a>												<em class="hide">、</em><a href="http://www.caffecn.cn/?/people/%E4%B8%80%E7%9A%84%E5%8D%83%E5%88%86%E4%B9%8B%E4%B8%80" data-id="140" class="aw-user-name hide">一的千分之一</a><a href="javascript:;" class="aw-agree-by-show" onclick="$(this).parents(&#39;.aw-agree-by&#39;).find(&#39;em,a&#39;).removeClass(&#39;hide&#39;); $(this).remove();">更多 »</a>
+																							</p>
+										</div>
+									</div>
+									<div class="mod-body clearfix">
+										<!-- 评论内容 -->
+										<div class="markitup-box">
+											我来说说我的理解，我认为1×1的卷积大概有两个方面的作用吧：<br>
+1. 实现跨通道的交互和信息整合<br>
+2. 进行卷积核通道数的降维和升维<br>
+&nbsp;<br>
+下面详细解释一下：<br>
+1. 这一点孙琳钧童鞋讲的很清楚。1×1的卷积层（可能）引起人们的重视是在NIN的结构中，论文中林敏师兄的想法是利用MLP代替传统的线性卷积核，从而提高网络的表达能力。文中同时利用了跨通道pooling的角度解释，认为文中提出的MLP其实等价于在传统卷积核后面接cccp层，从而实现多个feature map的线性组合，实现跨通道的信息整合。而cccp层是等价于1×1卷积的，因此细看NIN的caffe实现，就是在每个传统卷积层后面接了两个cccp层（其实就是接了两个1×1的卷积层）。<br>
+2. 进行降维和升维引起人们重视的（可能）是在GoogLeNet里。对于每一个Inception模块（如下图），原始模块是左图，右图中是加入了1×1卷积进行降维的。虽然左图的卷积核都比较小，但是当输入和输出的通道数很大时，乘起来也会使得卷积核参数变的很大，而右图加入1×1卷积后可以降低输入的通道数，卷积核参数、运算复杂度也就跟着降下来了。以GoogLeNet的3a模块为例，输入的feature map是28×28×192，3a模块中1×1卷积通道为64，3×3卷积通道为128,5×5卷积通道为32，如果是左图结构，那么卷积核参数为1×1×192×64+3×3×192×128+5×5×192×32，而右图对3×3和5×5卷积层前分别加入了通道数为96和16的1×1卷积层，这样卷积核参数就变成了1×1×192×64+（1×1×192×96+3×3×96×128）+（1×1×192×16+5×5×16×32），参数大约减少到原来的三分之一。同时在并行pooling层后面加入1×1卷积层后也可以降低输出的feature map数量，左图pooling后feature map是不变的，再加卷积层得到的feature map，会使输出的feature map扩大到416，如果每个模块都这样，网络的输出会越来越大。而右图在pooling后面加了通道为32的1×1卷积，使得输出的feature map数降到了256。GoogLeNet利用1×1的卷积降维后，得到了更为紧凑的网络结构，虽然总共有22层，但是参数数量却只是8层的AlexNet的十二分之一（当然也有很大一部分原因是去掉了全连接层）。<br>
+<div class="aw-upload-img-list active">
+	<a href="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/0a3555e1028a7ad2b485a4b892124919.JPG" target="_blank" data-fancybox-group="thumb" rel="lightbox"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/0a3555e1028a7ad2b485a4b892124919.JPG" class="img-polaroid" title="1.JPG" alt="1.JPG"></a>
+</div>
+<br>
+最近大热的MSRA的ResNet同样也利用了1×1卷积，并且是在3×3卷积层的前后都使用了，不仅进行了降维，还进行了升维，使得卷积层的输入和输出的通道数都减小，参数数量进一步减少，如下图的结构。（不然真不敢想象152层的网络要怎么跑起来TAT）<br>
+<div class="aw-upload-img-list active">
+	<a href="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/fd0cbb9c88c7347e655456edf4549c7c.JPG" target="_blank" data-fancybox-group="thumb" rel="lightbox"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/fd0cbb9c88c7347e655456edf4549c7c.JPG" class="img-polaroid" title="2.JPG" alt="2.JPG"></a>
+</div>
+<br>
+&nbsp;<br>
+（针对最近大大们头疼的侵权问题，在这里弱弱的加一句：本内容为本人原创，仅授权给CaffeCN社区（caffecn.cn）使用，如需转载须注明转载来源。(⊙v⊙)）										</div>
+
+																				<div class="aw-upload-img-list">
+																																																												</div>
+										
+																				<ul class="aw-upload-file-list">
+																																																																	</ul>
+																				<!-- end 评论内容 -->
+									</div>
+									<div class="mod-footer">
+										<!-- 社交操作 -->
+										<div class="meta clearfix">
+											<span class="text-color-999 pull-right">2016-01-26</span>
+											<!-- 投票栏 -->
+											<span class="operate">
+												<a class="agree  disabled"><i data-placement="right" title="" data-toggle="tooltip" class="icon icon-agree" data-original-title="赞同回复"></i> <b class="count">16</b></a>
+																							</span>
+											<!-- end 投票栏 -->
+											<span class="operate">
+												<a class="aw-add-comment active" data-id="228" data-type="answer" data-comment-count="7" data-first-click="" href="javascript:;"><i class="icon icon-comment"></i> 7</a>
+											</span>
+											<!-- 可显示/隐藏的操作box -->
+											<div class="more-operate">
+												
+																								<div class="btn-group pull-left">
+													<a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+														<i class="icon icon-share"></i> 分享													</a>
+													<div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+														<ul class="aw-dropdown-list">
+															<li><a onclick="AWS.User.share_out({webid: &#39;tsina&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-weibo"></i> 微博</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;qzone&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-qzone"></i> QZONE</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;weixin&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-wechat"></i> 微信</a></li>
+														</ul>
+													</div>
+												</div>
+																							</div>
+											<!-- end 可显示/隐藏的操作box -->
+
+										</div>
+										<!-- end 社交操作 -->
+									<div class="aw-comment-box" id="aw-comment-box-answer-228"><div class="aw-comment-list"><ul>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/54_avatar_min.jpg" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" class="aw-user-name author" data-id="54">月光里的阳光ysu</a>
+		 • <span>2016-01-27 10:54</span>
+	<p></p>
+	<p class="clearfix">感谢你的回答，请问你说的1X1卷积核能够对多个feature map实现线性组合。我的个人理解是不是和全局平均池化类似，只不过一个是求feature map的平均值，一个是线性组合？这样理解是不是对的？</p>
+	</div>
+</li>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/ruirui_ICT" data-id="92"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/92_avatar_min.jpg" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/ruirui_ICT" class="aw-user-name author" data-id="92">ruirui_ICT</a>
+		 • <span>2016-01-27 11:24</span>
+	<p></p>
+	<p class="clearfix">我认为你的理解没问题，平均池化是针对每个feature map的平均操作，没有通道间的交互，而1×1卷积是对通道的操作，在通道的维度上进行的线性组合</p>
+	</div>
+</li>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/54_avatar_min.jpg" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" class="aw-user-name author" data-id="54">月光里的阳光ysu</a>
+		 • <span>2016-01-27 12:35</span>
+	<p></p>
+	<p class="clearfix">非常感谢</p>
+	</div>
+</li>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E5%8D%81%E7%82%B9%E7%9D%A1%E4%B8%83%E7%82%B9%E8%B5%B7" data-id="369"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-min-img.png" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/%E5%8D%81%E7%82%B9%E7%9D%A1%E4%B8%83%E7%82%B9%E8%B5%B7" class="aw-user-name author" data-id="369">十点睡七点起</a>
+		 • <span>2016-02-28 19:30</span>
+	<p></p>
+	<p class="clearfix">Github有NIN的实现么？求大神分享链接</p>
+	</div>
+</li>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/ruirui_ICT" data-id="92"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/92_avatar_min.jpg" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/ruirui_ICT" class="aw-user-name author" data-id="92">ruirui_ICT</a>
+		 • <span>2016-03-04 16:22</span>
+	<p></p>
+	<p class="clearfix"><a href="http://www.caffecn.cn/?/people/%E5%8D%81%E7%82%B9%E7%9D%A1%E4%B8%83%E7%82%B9%E8%B5%B7" class="aw-user-name" data-id="369">@十点睡七点起</a>:caffe的model zoo里有，在cifar和imagenet上的都有，见<a href="https://github.com/BVLC/caffe/wiki/Model-Zoo" rel="nofollow" target="_blank">https://github.com/BVLC/caffe/wiki/Model-Zoo</a></p>
+	</div>
+</li>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E5%8D%81%E7%82%B9%E7%9D%A1%E4%B8%83%E7%82%B9%E8%B5%B7" data-id="369"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-min-img.png" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/%E5%8D%81%E7%82%B9%E7%9D%A1%E4%B8%83%E7%82%B9%E8%B5%B7" class="aw-user-name author" data-id="369">十点睡七点起</a>
+		 • <span>2016-03-06 14:49</span>
+	<p></p>
+	<p class="clearfix">非常感谢 以后会多关注的</p>
+	</div>
+</li>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E5%BE%A1%E5%AE%85%E6%9A%B4%E5%90%9B" data-id="1889"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-min-img.png" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/%E5%BE%A1%E5%AE%85%E6%9A%B4%E5%90%9B" class="aw-user-name author" data-id="1889">御宅暴君</a>
+		 • <span>2016-09-01 15:34</span>
+	<p></p>
+	<p class="clearfix">现在在看 GoogleNet, 很纳闷 Inception Module 是怎么来的，现在一看你的答案，原来是各种卷积核的六神合体啊……</p>
+	</div>
+</li>
+</ul>
+</div></div></div>
+								</div>
+																<div class="aw-item" uninterested_count="0" force_fold="0" id="answer_list_227">
+									<div class="mod-head">
+																				<a class="anchor" name="answer_227"></a>
+										<!-- 用户头像 -->
+										<a class="aw-user-img aw-border-radius-5" href="http://www.caffecn.cn/?/people/sunlinjun" data-id="10"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/10_avatar_mid.jpg" alt=""></a>										<!-- end 用户头像 -->
+										<div class="title">
+											<p>
+																									<a class="aw-user-name" href="http://www.caffecn.cn/?/people/sunlinjun" data-id="10">孙琳钧</a>
+																																																			<i class="icon-v" title="个人认证"></i>
+																																																															<i class="icon icon-phone"></i>
+																							</p>
+											<p class="text-color-999 aw-agree-by">
+												赞同来自:
+
+																																				<a href="http://www.caffecn.cn/?/people/MichaelXin" data-id="3" class="aw-user-name">辛淼</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/ruirui_ICT" data-id="92" class="aw-user-name">ruirui_ICT</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54" class="aw-user-name">月光里的阳光ysu</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/bonerkiller" data-id="1993" class="aw-user-name">bonerkiller</a>											</p>
+										</div>
+									</div>
+									<div class="mod-body clearfix">
+										<!-- 评论内容 -->
+										<div class="markitup-box">
+											对于单通道的feature map和单个卷积核之间的卷积来说，题主的理解是对的，CNN里的卷积大都是多通道的feature map和多通道的卷积核之间的操作（输入的多通道的feature map和一组卷积核做卷积求和得到一个输出的feature map），如果使用1x1的卷积核，这个操作实现的就是多个feature map的线性组合，可以实现feature map在通道个数上的变化。接在普通的卷积层的后面，配合激活函数，就可以实现network in network的结构了（本内容作者仅授权给CaffeCN社区（caffecn.cn）使用，如需转载请附上内容来源说明。）										</div>
+
+										
+																				<!-- end 评论内容 -->
+									</div>
+									<div class="mod-footer">
+										<!-- 社交操作 -->
+										<div class="meta clearfix">
+											<span class="text-color-999 pull-right">2016-01-26</span>
+											<!-- 投票栏 -->
+											<span class="operate">
+												<a class="agree  disabled"><i data-placement="right" title="" data-toggle="tooltip" class="icon icon-agree" data-original-title="赞同回复"></i> <b class="count">4</b></a>
+																							</span>
+											<!-- end 投票栏 -->
+											<span class="operate">
+												<a class="aw-add-comment active" data-id="227" data-type="answer" data-comment-count="1" data-first-click="" href="javascript:;"><i class="icon icon-comment"></i> 1</a>
+											</span>
+											<!-- 可显示/隐藏的操作box -->
+											<div class="more-operate">
+												
+																								<div class="btn-group pull-left">
+													<a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+														<i class="icon icon-share"></i> 分享													</a>
+													<div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+														<ul class="aw-dropdown-list">
+															<li><a onclick="AWS.User.share_out({webid: &#39;tsina&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-weibo"></i> 微博</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;qzone&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-qzone"></i> QZONE</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;weixin&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-wechat"></i> 微信</a></li>
+														</ul>
+													</div>
+												</div>
+																							</div>
+											<!-- end 可显示/隐藏的操作box -->
+
+										</div>
+										<!-- end 社交操作 -->
+									<div class="aw-comment-box" id="aw-comment-box-answer-227"><div class="aw-comment-list"><ul>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/haddis3" data-id="3450"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-min-img.png" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/haddis3" class="aw-user-name author" data-id="3450">haddis3</a>
+		 • <span>2017-02-24 15:51</span>
+	<p></p>
+	<p class="clearfix">我想问一下，就是如果前一层的feature map是64，下一层的feature map是128，卷积核是3*3，下一层的feature map是卷积核与前一层feature map做卷积然后相加得到的，我也能把这个过程看作是多个feature map的线性组合吗？还是只有1*1的卷积核的卷积过程才能看作是线性组合？</p>
+	</div>
+</li>
+</ul>
+</div></div></div>
+								</div>
+																<div class="aw-item" uninterested_count="0" force_fold="0" id="answer_list_233">
+									<div class="mod-head">
+																				<a class="anchor" name="answer_233"></a>
+										<!-- 用户头像 -->
+										<a class="aw-user-img aw-border-radius-5" href="http://www.caffecn.cn/?/people/shiorioxy" data-id="207"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" alt=""></a>										<!-- end 用户头像 -->
+										<div class="title">
+											<p>
+																									<a class="aw-user-name" href="http://www.caffecn.cn/?/people/shiorioxy" data-id="207">shiorioxy</a>
+																																																																																					</p>
+											<p class="text-color-999 aw-agree-by">
+												赞同来自:
+
+																																				<a href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54" class="aw-user-name">月光里的阳光ysu</a>												<em>、</em><a href="http://www.caffecn.cn/?/people/bonerkiller" data-id="1993" class="aw-user-name">bonerkiller</a>											</p>
+										</div>
+									</div>
+									<div class="mod-body clearfix">
+										<!-- 评论内容 -->
+										<div class="markitup-box">
+											还有一个重要的功能，就是可以在保持feature map 尺寸不变（即不损失分辨率）的前提下大幅增加非线性特性，把网络做得很deep。										</div>
+
+										
+																				<!-- end 评论内容 -->
+									</div>
+									<div class="mod-footer">
+										<!-- 社交操作 -->
+										<div class="meta clearfix">
+											<span class="text-color-999 pull-right">2016-01-28</span>
+											<!-- 投票栏 -->
+											<span class="operate">
+												<a class="agree  disabled"><i data-placement="right" title="" data-toggle="tooltip" class="icon icon-agree" data-original-title="赞同回复"></i> <b class="count">2</b></a>
+																							</span>
+											<!-- end 投票栏 -->
+											<span class="operate">
+												<a class="aw-add-comment" data-id="233" data-type="answer" data-comment-count="0" href="javascript:;"><i class="icon icon-comment"></i> 0</a>
+											</span>
+											<!-- 可显示/隐藏的操作box -->
+											<div class="more-operate">
+												
+																								<div class="btn-group pull-left">
+													<a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+														<i class="icon icon-share"></i> 分享													</a>
+													<div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+														<ul class="aw-dropdown-list">
+															<li><a onclick="AWS.User.share_out({webid: &#39;tsina&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-weibo"></i> 微博</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;qzone&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-qzone"></i> QZONE</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;weixin&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-wechat"></i> 微信</a></li>
+														</ul>
+													</div>
+												</div>
+																							</div>
+											<!-- end 可显示/隐藏的操作box -->
+
+										</div>
+										<!-- end 社交操作 -->
+									</div>
+								</div>
+																<div class="aw-item" uninterested_count="0" force_fold="0" id="answer_list_229">
+									<div class="mod-head">
+																				<a class="anchor" name="answer_229"></a>
+										<!-- 用户头像 -->
+										<a class="aw-user-img aw-border-radius-5" href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/54_avatar_mid.jpg" alt=""></a>										<!-- end 用户头像 -->
+										<div class="title">
+											<p>
+																									<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54">月光里的阳光ysu</a>
+																																																																																					</p>
+											<p class="text-color-999 aw-agree-by hide">
+												赞同来自:
+
+																							</p>
+										</div>
+									</div>
+									<div class="mod-body clearfix">
+										<!-- 评论内容 -->
+										<div class="markitup-box">
+											感谢两位的解答，对于两位在解答中说的1X1卷积核能够对多个feature map实现线性组合。我的个人理解是不是和全局平均池化类似，只不过一个是求feature map的平均值，一个是线性组合？										</div>
+
+										
+																				<!-- end 评论内容 -->
+									</div>
+									<div class="mod-footer">
+										<!-- 社交操作 -->
+										<div class="meta clearfix">
+											<span class="text-color-999 pull-right">2016-01-27</span>
+											<!-- 投票栏 -->
+											<span class="operate">
+												<a class="agree  disabled"><i data-placement="right" title="" data-toggle="tooltip" class="icon icon-agree" data-original-title="赞同回复"></i> <b class="count">0</b></a>
+																							</span>
+											<!-- end 投票栏 -->
+											<span class="operate">
+												<a class="aw-add-comment active" data-id="229" data-type="answer" data-comment-count="1" data-first-click="" href="javascript:;"><i class="icon icon-comment"></i> 1</a>
+											</span>
+											<!-- 可显示/隐藏的操作box -->
+											<div class="more-operate">
+												
+																								<div class="btn-group pull-left">
+													<a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+														<i class="icon icon-share"></i> 分享													</a>
+													<div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+														<ul class="aw-dropdown-list">
+															<li><a onclick="AWS.User.share_out({webid: &#39;tsina&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-weibo"></i> 微博</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;qzone&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-qzone"></i> QZONE</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;weixin&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-wechat"></i> 微信</a></li>
+														</ul>
+													</div>
+												</div>
+																							</div>
+											<!-- end 可显示/隐藏的操作box -->
+
+										</div>
+										<!-- end 社交操作 -->
+									<div class="aw-comment-box" id="aw-comment-box-answer-229"><div class="aw-comment-list"><ul>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/shuokay" data-id="103"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/03_avatar_min.jpg" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/shuokay" class="aw-user-name author" data-id="103">shuokay</a>
+		 • <span>2016-02-29 15:20</span>
+	<p></p>
+	<p class="clearfix">肯定不一样啊，global average pooling是在一个featuremap上面做的pooling，怎么能和feature map的线型组合类似呢……</p>
+	</div>
+</li>
+</ul>
+</div></div></div>
+								</div>
+																<div class="aw-item" uninterested_count="0" force_fold="0" id="answer_list_237">
+									<div class="mod-head">
+																				<a class="anchor" name="answer_237"></a>
+										<!-- 用户头像 -->
+										<a class="aw-user-img aw-border-radius-5" href="http://www.caffecn.cn/?/people/libai" data-id="65"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/65_avatar_mid.jpg" alt=""></a>										<!-- end 用户头像 -->
+										<div class="title">
+											<p>
+																									<a class="aw-user-name" href="http://www.caffecn.cn/?/people/libai" data-id="65">libai</a>
+																																																																																					</p>
+											<p class="text-color-999 aw-agree-by hide">
+												赞同来自:
+
+																							</p>
+										</div>
+									</div>
+									<div class="mod-body clearfix">
+										<!-- 评论内容 -->
+										<div class="markitup-box">
+											利用1*1的卷积可以实现矩阵的乘法~										</div>
+
+										
+																				<!-- end 评论内容 -->
+									</div>
+									<div class="mod-footer">
+										<!-- 社交操作 -->
+										<div class="meta clearfix">
+											<span class="text-color-999 pull-right">2016-02-01</span>
+											<!-- 投票栏 -->
+											<span class="operate">
+												<a class="agree  disabled"><i data-placement="right" title="" data-toggle="tooltip" class="icon icon-agree" data-original-title="赞同回复"></i> <b class="count">0</b></a>
+																							</span>
+											<!-- end 投票栏 -->
+											<span class="operate">
+												<a class="aw-add-comment active" data-id="237" data-type="answer" data-comment-count="1" data-first-click="" href="javascript:;"><i class="icon icon-comment"></i> 1</a>
+											</span>
+											<!-- 可显示/隐藏的操作box -->
+											<div class="more-operate">
+												
+																								<div class="btn-group pull-left">
+													<a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+														<i class="icon icon-share"></i> 分享													</a>
+													<div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+														<ul class="aw-dropdown-list">
+															<li><a onclick="AWS.User.share_out({webid: &#39;tsina&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-weibo"></i> 微博</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;qzone&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-qzone"></i> QZONE</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;weixin&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-wechat"></i> 微信</a></li>
+														</ul>
+													</div>
+												</div>
+																							</div>
+											<!-- end 可显示/隐藏的操作box -->
+
+										</div>
+										<!-- end 社交操作 -->
+									<div class="aw-comment-box" id="aw-comment-box-answer-237"><div class="aw-comment-list"><ul>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/54_avatar_min.jpg" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" class="aw-user-name author" data-id="54">月光里的阳光ysu</a>
+		 • <span>2016-02-01 13:33</span>
+	<p></p>
+	<p class="clearfix">能否具体说下</p>
+	</div>
+</li>
+</ul>
+</div></div></div>
+								</div>
+																<div class="aw-item" uninterested_count="0" force_fold="0" id="answer_list_1047">
+									<div class="mod-head">
+																				<a class="anchor" name="answer_1047"></a>
+										<!-- 用户头像 -->
+										<a class="aw-user-img aw-border-radius-5" href="http://www.caffecn.cn/?/people/%E5%B0%8F%E7%8B%90%E7%8B%B8%E6%98%AF%E5%A5%B3%E7%8E%8B%E5%A4%A7%E4%BA%BA" data-id="1477"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/77_avatar_mid.jpg" alt=""></a>										<!-- end 用户头像 -->
+										<div class="title">
+											<p>
+																									<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E5%B0%8F%E7%8B%90%E7%8B%B8%E6%98%AF%E5%A5%B3%E7%8E%8B%E5%A4%A7%E4%BA%BA" data-id="1477">小狐狸是女王大人</a>
+																																																																																					</p>
+											<p class="text-color-999 aw-agree-by hide">
+												赞同来自:
+
+																							</p>
+										</div>
+									</div>
+									<div class="mod-body clearfix">
+										<!-- 评论内容 -->
+										<div class="markitup-box">
+											cccp层是什么？？？										</div>
+
+										
+																				<!-- end 评论内容 -->
+									</div>
+									<div class="mod-footer">
+										<!-- 社交操作 -->
+										<div class="meta clearfix">
+											<span class="text-color-999 pull-right">2016-09-01</span>
+											<!-- 投票栏 -->
+											<span class="operate">
+												<a class="agree  disabled"><i data-placement="right" title="" data-toggle="tooltip" class="icon icon-agree" data-original-title="赞同回复"></i> <b class="count">0</b></a>
+																							</span>
+											<!-- end 投票栏 -->
+											<span class="operate">
+												<a class="aw-add-comment active" data-id="1047" data-type="answer" data-comment-count="2" data-first-click="" href="javascript:;"><i class="icon icon-comment"></i> 2</a>
+											</span>
+											<!-- 可显示/隐藏的操作box -->
+											<div class="more-operate">
+												
+																								<div class="btn-group pull-left">
+													<a class="text-color-999 dropdown-toggle" data-toggle="dropdown">
+														<i class="icon icon-share"></i> 分享													</a>
+													<div aria-labelledby="dropdownMenu" role="menu" class="aw-dropdown shareout pull-right">
+														<ul class="aw-dropdown-list">
+															<li><a onclick="AWS.User.share_out({webid: &#39;tsina&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-weibo"></i> 微博</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;qzone&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-qzone"></i> QZONE</a></li>
+															<li><a onclick="AWS.User.share_out({webid: &#39;weixin&#39;, title: $(this).parents(&#39;.aw-item&#39;).find(&#39;.markitup-box&#39;).text()});"><i class="icon icon-wechat"></i> 微信</a></li>
+														</ul>
+													</div>
+												</div>
+																							</div>
+											<!-- end 可显示/隐藏的操作box -->
+
+										</div>
+										<!-- end 社交操作 -->
+									<div class="aw-comment-box" id="aw-comment-box-answer-1047"><div class="aw-comment-list"><ul>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E5%BE%A1%E5%AE%85%E6%9A%B4%E5%90%9B" data-id="1889"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-min-img.png" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/%E5%BE%A1%E5%AE%85%E6%9A%B4%E5%90%9B" class="aw-user-name author" data-id="1889">御宅暴君</a>
+		 • <span>2016-09-01 15:53</span>
+	<p></p>
+	<p class="clearfix"><a href="http://linmin.me/post/73502988647/cccp-pooling" rel="nofollow" target="_blank">http://linmin.me/post/73502988647/cccp-pooling</a></p>
+	</div>
+</li>
+<li>
+	<a class="aw-user-name" href="http://www.caffecn.cn/?/people/andy_niu" data-id="3640"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-min-img.png" alt=""></a>
+	<div>
+			<a href="http://www.caffecn.cn/?/people/andy_niu" class="aw-user-name author" data-id="3640">andy_niu</a>
+		 • <span>2017-04-18 11:07</span>
+	<p></p>
+	<p class="clearfix">cascaded cross channel parametric pooling</p>
+	</div>
+</li>
+</ul>
+</div></div></div>
+								</div>
+																					</div>
+						<div class="mod-footer">
+															<div class="aw-load-more-content hide" id="load_uninterested_answers">
+									<span class="text-color-999 aw-alert-box text-color-999" href="javascript:;" tabindex="-1" onclick="AWS.alert(&#39;被折叠的回复是被你或者被大多数用户认为没有帮助的回复&#39;);">为什么被折叠?</span>
+									<a href="javascript:;" class="aw-load-more-content"><span class="hide_answers_count">0</span> 个回复被折叠</a>
+								</div>
+
+								<div class="hide aw-feed-list" id="uninterested_answers_list"></div>
+													</div>
+
+											</div>
+										<!-- end 问题详细模块 -->
+
+										<!-- 回复编辑器 -->
+					<div class="aw-mod aw-replay-box question">
+						<a name="answer_form"></a>
+												<p align="center">要回复问题请先<a href="http://www.caffecn.cn/?/account/login/">登录</a>或<a href="http://www.caffecn.cn/?/account/register/">注册</a></p>
+											</div>
+					<!-- end 回复编辑器 -->
+									</div>
+				<!-- 侧边栏 -->
+				<div class="col-md-3 aw-side-bar hidden-xs hidden-sm">
+					<!-- 发起人 -->
+										<div class="aw-mod">
+						<div class="mod-head">
+							<h3>发起人</h3>
+						</div>
+						<div class="mod-body">
+							<dl>
+								<dt class="pull-left aw-border-radius-5">
+									<a href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu"><img alt="月光里的阳光ysu" src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/54_avatar_mid.jpg"></a>
+								</dt>
+								<dd class="pull-left">
+									<a class="aw-user-name" href="http://www.caffecn.cn/?/people/%E6%9C%88%E5%85%89%E9%87%8C%E7%9A%84%E9%98%B3%E5%85%89ysu" data-id="54">月光里的阳光ysu</a>
+																											<p></p>
+								</dd>
+							</dl>
+						</div>
+					</div>
+										<!-- end 发起人 -->
+
+					
+					
+										<!-- 相关问题 -->
+					<div class="aw-mod">
+						<div class="mod-head">
+							<h3>相关问题</h3>
+						</div>
+						<div class="mod-body font-size-12">
+							<ul>
+																<li><a href="http://www.caffecn.cn/?/question/15">caffe中image_mean的作用是什么？</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/175">卷积网络的入口，对于彩色图像R,G,B三个通道是如何处理的？
+</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/361">caffe 中卷积层 参数 group 的作用</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/659">caffe学习入门问题，train.txt val.txt test.txt文件作用关系搞不清楚</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/2">Caffe中,Net.hpp中loss_need_backward、blob_need_backward、layer_need_backward这三个变量的作用和它们之间的联系</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/35">double-column的卷积神经网络是怎么进行训练的?Caffe可以实现这种多列的卷积网络吗?</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/202">blob中对于卷积权重表示为Output*Input*Height*Width，这四个字段分别代表什么呢？</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/1511">AlexNet论文中的第二个卷积核大小中5*5*48 这个48是怎么来的？</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/1556">caffe的源码中col_buff是什么作用？</a></li>
+																<li><a href="http://www.caffecn.cn/?/question/117">momentum的作用是什么？</a></li>
+															</ul>
+						</div>
+					</div>
+					<!-- end 相关问题 -->
+					
+					<!-- 问题状态 -->
+					<div class="aw-mod question-status">
+						<div class="mod-head">
+							<h3>问题状态</h3>
+						</div>
+						<div class="mod-body">
+							<ul>
+								<li>最新活动: <span class="aw-text-color-blue">2017-07-02 11:09</span></li>
+								<li>浏览: <span class="aw-text-color-blue">14960</span></li>
+								<li>关注: <span class="aw-text-color-blue">42</span> 人</li>
+
+								<li class="aw-border-radius-5" id="focus_users"><a href="http://www.caffecn.cn/?/people/clove"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="84" alt="clove"></a> <a href="http://www.caffecn.cn/?/people/%E4%B8%80%E7%9A%84%E5%8D%83%E5%88%86%E4%B9%8B%E4%B8%80"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/40_avatar_mid.jpg" class="aw-user-name" data-id="140" alt="一的千分之一"></a> <a href="http://www.caffecn.cn/?/people/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6%E4%B8%8E%E6%8A%80%E6%9C%AF%E5%AD%A6%E9%99%A2%E7%8E%8B%E9%80%8D"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/54_avatar_mid(1).jpg" class="aw-user-name" data-id="854" alt="计算机科学与技术学院王逍"></a> <a href="http://www.caffecn.cn/?/people/mengzhangjian"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="914" alt="mengzhangjian"></a> <a href="http://www.caffecn.cn/?/people/lwslove911"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="1346" alt="lwslove911"></a> <a href="http://www.caffecn.cn/?/people/Banggui02"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/05_avatar_mid.jpg" class="aw-user-name" data-id="1605" alt="Banggui02"></a> <a href="http://www.caffecn.cn/?/people/%E5%9B%A7%E5%9B%A7%E6%9D%A5%E5%95%A6"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/07_avatar_mid.jpg" class="aw-user-name" data-id="1707" alt="囧囧来啦"></a> <a href="http://www.caffecn.cn/?/people/%E5%B0%8F%E7%90%B3%E5%AD%902015"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="1808" alt="小琳子2015"></a> <a href="http://www.caffecn.cn/?/people/dagunliyu"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="2413" alt="dagunliyu"></a> <a href="http://www.caffecn.cn/?/people/yanhl"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/65_avatar_mid(1).jpg" class="aw-user-name" data-id="2765" alt="yanhl"></a> <a href="http://www.caffecn.cn/?/people/%E4%B8%96%E7%95%8C%E4%BD%A0%E5%A5%BD"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="3010" alt="世界你好"></a> <a href="http://www.caffecn.cn/?/people/haddis3"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="3450" alt="haddis3"></a> <a href="http://www.caffecn.cn/?/people/showaichuan"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/54_avatar_mid(2).jpg" class="aw-user-name" data-id="3554" alt="showaichuan"></a> <a href="http://www.caffecn.cn/?/people/zhao_l"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="4280" alt="zhao_l"></a> <a href="http://www.caffecn.cn/?/people/%E9%B1%BC%E4%B9%8B%E4%B9%90"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/38_avatar_mid.jpg" class="aw-user-name" data-id="4438" alt="鱼之乐"></a> <a href="http://www.caffecn.cn/?/people/gmly666999"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/41_avatar_mid.jpg" class="aw-user-name" data-id="4541" alt="gmly666999"></a> <a href="http://www.caffecn.cn/?/people/%E5%93%AD%E7%AC%91%E4%B8%8D%E5%BE%97"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="4552" alt="哭笑不得"></a> <a href="http://www.caffecn.cn/?/people/%E6%9D%8E%E6%96%AF%E5%A5%87"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/avatar-mid-img.png" class="aw-user-name" data-id="5065" alt="李斯奇"></a> </li>
+							</ul>
+						</div>
+					</div>
+					<!-- end 问题状态 -->
+				</div>
+				<!-- end 侧边栏 -->
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var ATTACH_ACCESS_KEY = '787f0e8fdd4b9141e617d78621a66b4d';
+	var ITEM_IDS = '';
+	var COMMENT_UNFOLD = 'all';
+	var QUESTION_ID = 136;
+	var UNINTERESTED_COUNT = 5;
+	var ANSWER_EDIT_TIME = 240;
+	var USER_ANSWERED = '';
+	var UPLOAD_ENABLE = 'N';
+	var ANSWER_TYPE = 'answer';
+</script>
+
+<script type="text/javascript" src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/question_detail.js.下载"></script>
+
+<div class="aw-footer-wrap">
+	<div class="aw-footer">
+		Copyright © 2017<span class="hidden-xs"> - 京ICP备15020089号-2, All Rights Reserved </span>
+
+		<!-- <span class="hidden-xs">Powered By <a href="http://www.wecenter.com/?copyright" target="blank">WeCenter 3.1.6</a></span> -->
+		
+		<!-- CNZZ 统计 -->
+		<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257873011'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257873011%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script><span id="cnzz_stat_icon_1257873011"><a href="http://www.cnzz.com/stat/website.php?web_id=1257873011" target="_blank" title="站长统计"><img border="0" hspace="0" vspace="0" src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/pic.gif"></a></span><script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/z_stat.php" type="text/javascript"></script><script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/core.php" charset="utf-8" type="text/javascript"></script>
+    
+		
+			</div>
+</div>
+
+
+
+<a class="aw-back-top hidden-xs" href="javascript:;" onclick="$.scrollTo(1, 600, {queue:true});" style="display: block;"><i class="icon icon-up"></i></a>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1257873011'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1257873011%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script><span id="cnzz_stat_icon_1257873011"></span><script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/z_stat.php" type="text/javascript"></script><script src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/core.php" charset="utf-8" type="text/javascript"></script>
+<!-- DO NOT REMOVE -->
+<div id="aw-ajax-box" class="aw-ajax-box"></div>
+<div style="display:none;" id="__crond"><img src="./1X1卷积核到底有什么作用呢？ - CaffeCN深度学习社区_files/saved_resource" width="1" height="1"></div>
+
+<!-- Escape time: 0.029000997543335 --><!-- / DO NOT REMOVE -->
+
+
+</body></html>
